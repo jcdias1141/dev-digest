@@ -52,7 +52,17 @@ export default function DigestBrowser({ items, categories, editions }) {
   return (
     <div className="grid gap-12 lg:grid-cols-[13rem_1fr]">
       {/* Navegação: acompanha a rolagem em telas largas. */}
-      <aside className="lg:sticky lg:top-24 lg:self-start">
+      <aside
+        aria-labelledby="filtros"
+        className="lg:sticky lg:top-24 lg:self-start"
+      >
+        <h2
+          id="filtros"
+          className="mb-4 border-b border-neutral-900 pb-2 text-xs font-medium uppercase tracking-wider text-neutral-500"
+        >
+          Filtros
+        </h2>
+
         <label htmlFor="busca" className="sr-only">
           Buscar novidades
         </label>
@@ -62,10 +72,10 @@ export default function DigestBrowser({ items, categories, editions }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Buscar…"
-          className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 focus:border-neutral-700"
+          className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2 text-base text-neutral-200 placeholder:text-neutral-600 focus:border-neutral-700"
         />
 
-        <nav aria-label="Categorias" className="mt-5 space-y-0.5">
+        <nav aria-label="Categorias" className="mt-4 space-y-0.5">
           <CategoryLink
             active={category === "todos"}
             onClick={() => setCategory("todos")}
@@ -83,7 +93,7 @@ export default function DigestBrowser({ items, categories, editions }) {
           ))}
         </nav>
 
-        <p aria-live="polite" className="mt-5 text-xs text-neutral-600">
+        <p aria-live="polite" className="mt-5 text-sm text-neutral-600">
           {filteredItems.length}{" "}
           {filteredItems.length === 1 ? "novidade" : "novidades"}
           {remaining > 0 ? ` · mostrando ${visibleItems.length}` : ""}
@@ -169,14 +179,23 @@ function CategoryLink({ active, onClick, label, count }) {
       onClick={onClick}
       aria-pressed={active}
       className={
-        "flex w-full items-baseline justify-between gap-2 rounded-md px-2 py-1.5 text-left text-sm transition " +
+        "group/cat flex w-full items-center justify-between gap-2 rounded-md px-2 py-2 text-left text-base transition " +
         (active
           ? "bg-emerald-400/10 text-emerald-300"
           : "text-neutral-400 hover:bg-neutral-900 hover:text-neutral-200")
       }
     >
       <span>{label}</span>
-      <span className={active ? "text-xs text-emerald-400/60" : "text-xs text-neutral-600"}>
+      {/* tabular-nums: os números alinham entre si mesmo com larguras
+          diferentes (1 vs 12), senão as pílulas ficam tortas na coluna. */}
+      <span
+        className={
+          "min-w-[1.5rem] shrink-0 rounded-md px-1.5 py-0.5 text-center text-sm font-medium tabular-nums " +
+          (active
+            ? "bg-emerald-400/20 text-emerald-200"
+            : "bg-neutral-800 text-neutral-300 group-hover/cat:bg-neutral-700")
+        }
+      >
         {count}
       </span>
     </button>
