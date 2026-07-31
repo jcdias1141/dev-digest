@@ -3,6 +3,8 @@ import remarkGfm from "remark-gfm";
 // O <details> do gabarito é HTML bruto no markdown; sem rehype-raw o
 // react-markdown o imprime como texto literal.
 import rehypeRaw from "rehype-raw";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { getAllPosts, getPostWithNeighbors } from "../../../lib/posts";
 import { formatDate } from "../../../lib/format";
 import { CategoryBadge } from "../../DigestBrowser";
@@ -73,9 +75,15 @@ export default async function PostPage({ params }) {
                     href={item.source}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative z-10 mt-3 inline-block text-xs text-emerald-400 hover:text-emerald-300"
+                    className="relative z-10 mt-3 inline-flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300"
                   >
-                    fonte ↗
+                    fonte
+                    <HugeiconsIcon
+                      icon={ArrowUpRight01Icon}
+                      size={14}
+                      strokeWidth={2}
+                      aria-hidden="true"
+                    />
                   </a>
                 )}
               </li>

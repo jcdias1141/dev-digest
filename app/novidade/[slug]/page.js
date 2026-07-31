@@ -1,6 +1,8 @@
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { getAllItems, getItemWithNeighbors } from "../../../lib/posts";
 import { formatDate } from "../../../lib/format";
 import { CategoryBadge } from "../../DigestBrowser";
@@ -73,7 +75,13 @@ export default async function ItemPage({ params }) {
           rel="noopener noreferrer"
           className="mt-10 inline-flex items-center gap-2 rounded-lg border border-neutral-800 px-4 py-2.5 text-sm text-emerald-400 transition hover:border-emerald-400/40 hover:text-emerald-300"
         >
-          Ler na fonte original ↗
+          Ler na fonte original
+          <HugeiconsIcon
+            icon={ArrowUpRight01Icon}
+            size={16}
+            strokeWidth={2}
+            aria-hidden="true"
+          />
         </a>
       )}
 

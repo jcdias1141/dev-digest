@@ -1,3 +1,5 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CalendarCheckIcon } from "@hugeicons/core-free-icons";
 import DigestBrowser from "./DigestBrowser";
 import { getAllItems, getAllPosts, getCategories } from "../lib/posts";
 import { formatDate } from "../lib/format";
@@ -41,7 +43,13 @@ export default function Home() {
           <h2 className="mt-2 text-2xl font-bold text-neutral-100 group-hover:text-emerald-300">
             {latest.title}
           </h2>
-          <p className="mt-1 text-sm text-neutral-500">
+          <p className="mt-1.5 inline-flex items-center gap-1.5 text-sm text-neutral-500">
+            <HugeiconsIcon
+              icon={CalendarCheckIcon}
+              size={15}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
             {formatDate(latest.date)}
           </p>
           {latest.items.length > 0 && (

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { formatShortDate, normalize } from "../lib/format";
 
 const PAGE_SIZE = 12;
@@ -305,9 +307,15 @@ function Item({ item }) {
             href={item.source}
             target="_blank"
             rel="noopener noreferrer"
-            className="relative z-10 text-emerald-400 hover:text-emerald-300"
+            className="relative z-10 inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300"
           >
-            fonte ↗
+            fonte
+            <HugeiconsIcon
+              icon={ArrowUpRight01Icon}
+              size={14}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
           </a>
         )}
         <span className="text-neutral-600">{item.postTitle}</span>
