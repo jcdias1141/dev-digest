@@ -25,6 +25,15 @@ Fluxo: arquivo `.md` em `content/` → `lib/posts.js` → páginas.
 tempo de build/render de servidor e faz o parse do frontmatter com `gray-matter`.
 Não existe banco, CMS nem API — para adicionar um digest basta criar o arquivo.
 
+**Duas camadas de conteúdo**, e confundi-las é o erro mais fácil de cometer:
+
+- **Edição** (`/post/2026-08-03`) — um arquivo `.md`, o digest da semana
+- **Novidade** (`/novidade/<slug>`) — um `item` do frontmatter, com página própria
+
+Um arquivo `.md` gera **uma** página de edição e **N** páginas de novidade.
+
+Funções:
+
 - `getAllPosts()` — edições, mais recente primeiro. Cada uma carrega `items` já
   normalizados e um `searchText` (título + tags + corpo markdown, sem acento).
 - `getPost(slug)` / `getPostWithNeighbors(slug)` — a segunda devolve também
@@ -32,12 +41,19 @@ Não existe banco, CMS nem API — para adicionar um digest basta criar o arquiv
 - `getAllItems()` — achata os `items` de todas as edições num array só, cada
   item com referência de volta (`postSlug`, `postTitle`, `date`) e o próprio
   `searchText`.
+- `getItem(slug)` / `getItemWithNeighbors(slug)` — a segunda devolve `prev`/`next`
+  **dentro da mesma edição**, para navegar entre as novidades da semana.
 - `getCategories()` — categorias distintas com contagem. `"Claude Code"` é
   fixado em primeiro via `PINNED_CATEGORIES`; o resto por contagem desc e
   alfabética no empate.
 
-O **slug é derivado do nome do arquivo** (`2026-07-27.md` → `/post/2026-07-27`),
-então o nome do arquivo é a URL. A convenção é `YYYY-MM-DD.md`.
+O **slug da edição vem do nome do arquivo** (`2026-07-27.md` → `/post/2026-07-27`).
+A convenção é `YYYY-MM-DD.md`.
+
+O **slug da novidade vem do título**, atribuído por `assignItemSlugs()`. Ele roda
+uma vez sobre todas as edições porque a unicidade é global, e percorre **do mais
+antigo para o mais novo de propósito**: se uma edição futura repetir um título,
+quem ganha o sufixo com a data é a nova, então URLs já publicadas nunca mudam.
 
 **Páginas:**
 
@@ -47,19 +63,33 @@ então o nome do arquivo é a URL. A convenção é `YYYY-MM-DD.md`.
   `categories` e `editions` já prontos via props, para que o `fs` continue
   rodando só no servidor. Faz busca, filtro por categoria e "carregar mais"
   (`PAGE_SIZE`, resetado sempre que o filtro muda).
-- `app/post/[slug]/page.js` — "Nesta edição" (items com fonte) + corpo markdown
-  + navegação anterior/seguinte. `params` é assíncrono (Next.js 16) — precisa
-  de `await params`.
+- `app/post/[slug]/page.js` — a edição: "Nesta edição" (cards linkando para
+  `/novidade/`) + corpo markdown + navegação anterior/seguinte.
+- `app/novidade/[slug]/page.js` — a novidade: resumo como lead, `body` em
+  markdown, link da fonte e navegação entre irmãs da mesma edição.
 - `app/layout.js` — header sticky, `lang="pt-BR"`, container `max-w-5xl`.
+
+`params` é assíncrono nas duas rotas dinâmicas (Next.js 16) — precisa de
+`await params`.
+
+**Cards clicáveis:** o título usa `after:absolute after:inset-0` para esticar a
+área de clique por todo o card, com o `li` em `relative`. Links internos ao card
+(a fonte externa) precisam de `relative z-10` para não serem engolidos.
 
 ## Formato do digest
 
 `content/2026-07-27.md` é o arquivo-modelo; o `README.md` documenta o formato
 completo e traz o trecho para o prompt de curadoria que gera os arquivos.
 
-Regra que orienta o resto: **`items` são as novidades** (o que a home indexa),
-**o corpo markdown é o que não é item** (`## Destaque da semana`,
-`## Fixar o que li`, `## Retomando`). `summary` é texto puro, não markdown.
+Regra que orienta o resto:
+
+- `summary` — texto puro (2-3 frases), o card. Backticks apareceriam literais.
+- `body` — markdown de verdade, o texto longo da página da novidade. Opcional.
+- corpo do arquivo — só o que é da edição: `## Fixar o que li` e `## Retomando`.
+
+**Não existe mais `## Destaque da semana` no corpo.** O aprofundamento de um
+item vive no `body` dele; repetir no corpo colocaria o mesmo texto em duas
+páginas.
 
 `cover`/`coverAlt` são opcionais. Renderizados com `<img>` puro, **não com
 `next/image`** — de propósito, para aceitar tanto caminho local quanto URL

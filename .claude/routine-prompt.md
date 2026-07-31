@@ -39,7 +39,12 @@ Seja técnico e direto. Evite hype sem substância. **Não invente números nem 
 
 **Antes de escrever, leia o `README.md` e um arquivo existente em `content/`** — eles são a fonte da verdade sobre o formato. Se divergirem deste prompt, siga o repositório.
 
-Grave em `content/<AAAA-MM-DD>.md`. Frontmatter — cada novidade pesquisada vira uma entrada em `items`, e sem isso ela não aparece no índice da home:
+Você grava **um único arquivo** em `content/<AAAA-MM-DD>.md`. Ele gera duas camadas de páginas no site:
+
+- **a edição** (`/post/<AAAA-MM-DD>`) — o digest da semana, índice de tudo
+- **uma página por novidade** (`/novidade/<slug-do-titulo>`) — uma para cada entrada de `items`
+
+Ou seja: um commit por semana, mas 6 a 9 páginas publicadas.
 
 ```yaml
 ---
@@ -52,25 +57,35 @@ items:
     summary: >-
       <2 a 3 frases explicando o que é e por que importa>
     source: "<url da fonte>"
+    body: |
+      <texto longo da página da novidade — 2 a 4 parágrafos>
+
+      ## Por que importa
+
+      <impacto prático para quem trabalha sozinho>
 ---
 ```
 
 Regras do frontmatter:
 - `category` deve ser exatamente uma destas: `Claude Code`, `Outras ferramentas`, `Modelos`, `Frameworks`
 - `summary` é **texto puro**, não markdown: backticks e `**negrito**` apareceriam literais na tela. Escreva `os params` em vez de `` `params` ``
+- `body` **é markdown de verdade** — pode usar `##`, listas e blocos de código. Escreva um para **cada** item: é o conteúdo da página daquela novidade. Sem ele a página fica praticamente vazia
 - `source` é opcional, mas inclua sempre que houver fonte
 - `cover` é opcional — omita, você não tem como produzir imagem
 
-Corpo do markdown, depois do frontmatter:
-- `## Destaque da semana: <título>` — dois parágrafos analisando o item mais importante e por que ele importa para quem trabalha sozinho
+Corpo do markdown, depois do frontmatter — **só o que pertence à edição, não a um item**:
 - `## Fixar o que li` — duas perguntas de memória sobre o conteúdo, com o gabarito dentro de `<details><summary>Gabarito</summary>` ... `</details>`
 - `## Retomando` — um item marcante de ~1 e ~2 semanas atrás, no formato "você lembra disso?". Leia os arquivos anteriores em `content/` para achar. Se não houver edições anteriores, escreva uma linha dizendo isso.
 
-**Não repita no corpo o que já está em `items`.** As seções por tópico vivem no frontmatter; o corpo é só análise, perguntas e retomada.
+**Não escreva `## Destaque da semana` no corpo.** O aprofundamento de cada novidade vai no `body` dela. Repetir no corpo colocaria o mesmo texto em duas páginas diferentes.
 
 ## 4. Verifique
 
-Rode `npm install` e depois `npm run build`. O build precisa passar e a rota `/post/<AAAA-MM-DD>` precisa aparecer na listagem de rotas da saída. Se falhar, corrija antes de seguir.
+Rode `npm install` e depois `npm run build`. Confira na listagem de rotas da saída:
+- a rota `/post/<AAAA-MM-DD>` apareceu
+- apareceu **uma rota `/novidade/<slug>` para cada item** que você escreveu
+
+Se faltar alguma, o item está malformado. Corrija antes de seguir.
 
 ## 5. Publique
 

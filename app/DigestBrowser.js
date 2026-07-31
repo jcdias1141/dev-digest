@@ -266,7 +266,7 @@ function Item({ item }) {
         {/* after:inset-0 estica a área de clique por todo o card, mantendo
             um único link no leitor de tela em vez de vários repetidos. */}
         <a
-          href={`/post/${item.postSlug}#${item.id}`}
+          href={`/novidade/${item.slug}`}
           className="after:absolute after:inset-0 after:rounded-xl group-hover:text-emerald-300"
         >
           {item.title}

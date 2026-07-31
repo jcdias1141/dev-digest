@@ -52,14 +52,16 @@ export default async function PostPage({ params }) {
             {post.items.map((item) => (
               <li
                 key={item.id}
-                id={item.id}
-                /* scroll-mt: o header é sticky, senão a âncora fica escondida
-                   atrás dele. target: destaca o item que veio da home. */
-                className="scroll-mt-24 rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 target:border-emerald-400/40 target:bg-emerald-400/5"
+                className="group relative rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 transition hover:border-neutral-700 hover:bg-neutral-900"
               >
                 <CategoryBadge name={item.category} slug={item.categorySlug} />
                 <h3 className="mt-2.5 text-2xl font-bold leading-snug text-neutral-100">
-                  {item.title}
+                  <a
+                    href={`/novidade/${item.slug}`}
+                    className="after:absolute after:inset-0 after:rounded-xl group-hover:text-emerald-300"
+                  >
+                    {item.title}
+                  </a>
                 </h3>
                 {item.summary && (
                   <p className="mt-2 text-base leading-relaxed text-neutral-400">
@@ -71,7 +73,7 @@ export default async function PostPage({ params }) {
                     href={item.source}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1.5 inline-block text-xs text-emerald-400 hover:text-emerald-300"
+                    className="relative z-10 mt-3 inline-block text-xs text-emerald-400 hover:text-emerald-300"
                   >
                     fonte ↗
                   </a>

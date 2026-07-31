@@ -15,16 +15,30 @@ Abre em http://localhost:3000
 - O nome do arquivo vira a URL (`/post/2026-08-03`), então use `YYYY-MM-DD.md`
 - O frontmatter define título, data, tags e a lista de `items` — as novidades
   daquela semana
+- **Cada item vira uma página própria** em `/novidade/<slug-do-titulo>`
 - A home indexa os `items` de todas as edições: busca por texto, filtro por
-  categoria na lateral e "carregar mais"
-- Cada post renderiza "Nesta edição" (os items com link da fonte), o markdown
-  do corpo e navegação para a edição anterior/seguinte
+  categoria na lateral e "carregar mais". Clicar num card abre a página da
+  novidade
+- Cada post é o índice da semana: "Nesta edição" com os items, o corpo markdown
+  e navegação para a edição anterior/seguinte
+
+## Duas camadas
+
+O blog tem dois tipos de página, e é importante não confundir:
+
+| | URL | O que é |
+|---|---|---|
+| **Edição** | `/post/2026-08-03` | O digest da semana inteiro — índice dos items, perguntas e "Retomando" |
+| **Novidade** | `/novidade/subagentes-paralelos-no-claude-code` | Uma novidade só, com texto longo e link da fonte |
+
+Os items de uma edição continuam pertencendo a ela — cada página de novidade
+linka de volta para o digest onde saiu, e navega entre as irmãs da mesma semana.
 
 ## Formato do digest
 
 ```yaml
 ---
-title: "Digest — 04 de agosto"
+title: "Digest — 03 de agosto"
 date: 2026-08-03
 tags: ["claude-code", "cursor", "nextjs"]
 cover: "/images/2026-08-03.png"
@@ -35,24 +49,41 @@ items:
     summary: >-
       Resumo curto em texto puro (não é markdown).
     source: "https://code.claude.com/docs/en/changelog"
+    body: |
+      Texto longo da página da novidade. Aqui **é** markdown:
+      subtítulos, listas e blocos de código funcionam.
+
+      ## Por que importa
+
+      Dois ou três parágrafos explicando o impacto prático.
 ---
 
-## Destaque da semana: …
 ## Fixar o que li
 ## Retomando
 ```
 
 Divisão de responsabilidade:
 
-- **`items`** — as novidades em si. É o que a home indexa, agrupa e busca.
-  `summary` é **texto puro**: backticks e `**negrito**` apareceriam literais.
-  `category` e `source` são opcionais (sem categoria, cai em "Outras novidades").
-- **corpo markdown** — o que não é item: `## Destaque da semana` (análise mais
-  longa), `## Fixar o que li` (perguntas + gabarito em `<details>`) e
-  `## Retomando`.
+- **`summary`** — as 2-3 frases do card, na home e no índice da edição.
+  É **texto puro**: backticks e `**negrito**` apareceriam literais.
+- **`body`** — o texto longo da página da novidade. É **markdown de verdade**.
+  Opcional; sem ele a página mostra só o resumo e o link da fonte.
+- **corpo markdown do arquivo** — o que é da edição, não de um item:
+  `## Fixar o que li` (perguntas + gabarito em `<details>`) e `## Retomando`.
+
+Não repita: o aprofundamento de um item vai no `body` dele, não numa seção
+`## Destaque da semana` no corpo. Senão o mesmo texto aparece em duas páginas.
+
+`category` e `source` são opcionais (sem categoria, cai em "Outras novidades").
 
 Categorias são strings livres. `"Claude Code"` sempre aparece primeiro na
 lateral; as demais vêm por volume de itens e depois em ordem alfabética.
+
+### Slug da novidade
+
+Gerado do título, sem acento (`"Subagentes paralelos no Claude Code"` →
+`subagentes-paralelos-no-claude-code`). Se uma edição futura repetir um título,
+quem ganha sufixo com a data é a **nova** — as URLs antigas nunca mudam.
 
 ## Imagem de capa
 
