@@ -52,7 +52,10 @@ export default async function PostPage({ params }) {
             {post.items.map((item) => (
               <li
                 key={item.id}
-                className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-5"
+                id={item.id}
+                /* scroll-mt: o header é sticky, senão a âncora fica escondida
+                   atrás dele. target: destaca o item que veio da home. */
+                className="scroll-mt-24 rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 target:border-emerald-400/40 target:bg-emerald-400/5"
               >
                 <CategoryBadge name={item.category} slug={item.categorySlug} />
                 <h3 className="mt-2.5 text-2xl font-bold leading-snug text-neutral-100">

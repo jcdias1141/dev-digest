@@ -254,38 +254,44 @@ export function CategoryBadge({ name, slug }) {
 
 function Item({ item }) {
   return (
-    <li className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 transition hover:border-neutral-700 hover:bg-neutral-900">
+    <li className="group relative rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 transition hover:border-neutral-700 hover:bg-neutral-900">
       <div className="flex items-center justify-between gap-4">
         <CategoryBadge name={item.category} slug={item.categorySlug} />
         <span className="shrink-0 text-xs text-neutral-600">
           {formatShortDate(item.date)}
         </span>
       </div>
+
       <h3 className="mt-2.5 text-2xl font-bold leading-snug text-neutral-100">
-        {item.title}
+        {/* after:inset-0 estica a área de clique por todo o card, mantendo
+            um único link no leitor de tela em vez de vários repetidos. */}
+        <a
+          href={`/post/${item.postSlug}#${item.id}`}
+          className="after:absolute after:inset-0 after:rounded-xl group-hover:text-emerald-300"
+        >
+          {item.title}
+        </a>
       </h3>
+
       {item.summary && (
         <p className="mt-2 text-base leading-relaxed text-neutral-400">
           {item.summary}
         </p>
       )}
+
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-neutral-800/60 pt-3 text-xs">
         {item.source && (
+          /* z-10 mantém a fonte clicável por cima da área esticada. */
           <a
             href={item.source}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-emerald-400 hover:text-emerald-300"
+            className="relative z-10 text-emerald-400 hover:text-emerald-300"
           >
             fonte ↗
           </a>
         )}
-        <a
-          href={`/post/${item.postSlug}`}
-          className="text-neutral-600 hover:text-neutral-300"
-        >
-          {item.postTitle}
-        </a>
+        <span className="text-neutral-600">{item.postTitle}</span>
       </div>
     </li>
   );
