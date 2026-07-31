@@ -6,8 +6,8 @@ import rehypeRaw from "rehype-raw";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { getAllPosts, getPostWithNeighbors } from "../../../lib/posts";
-import { formatDate } from "../../../lib/format";
 import { CategoryBadge } from "../../DigestBrowser";
+import DateLine from "../../DateLine";
 
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -33,7 +33,7 @@ export default async function PostPage({ params }) {
       <h1 className="mt-4 text-[42px] font-bold leading-tight tracking-tight text-emerald-400">
         {post.title}
       </h1>
-      <p className="mt-2 text-sm text-neutral-500">{formatDate(post.date)}</p>
+      <DateLine date={post.date} className="mt-2" />
 
       {post.cover && (
         /* <img> simples em vez de next/image: aceita tanto caminho local

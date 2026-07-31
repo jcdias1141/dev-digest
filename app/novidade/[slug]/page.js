@@ -4,8 +4,8 @@ import rehypeRaw from "rehype-raw";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { getAllItems, getItemWithNeighbors } from "../../../lib/posts";
-import { formatDate } from "../../../lib/format";
 import { CategoryBadge } from "../../DigestBrowser";
+import DateLine from "../../DateLine";
 
 export function generateStaticParams() {
   return getAllItems().map((i) => ({ slug: i.slug }));
@@ -41,7 +41,7 @@ export default async function ItemPage({ params }) {
 
       <div className="mt-5 flex items-center gap-3">
         <CategoryBadge name={item.category} slug={item.categorySlug} />
-        <span className="text-sm text-neutral-500">{formatDate(item.date)}</span>
+        <DateLine date={item.date} />
       </div>
 
       <h1 className="mt-4 text-[42px] font-bold leading-tight tracking-tight text-emerald-400">
