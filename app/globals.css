@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Söhne — fonte licenciada da Klim Type Foundry, não redistribuível.
+   Para ativar: coloque os .woff2 em public/fonts/ com os nomes abaixo e
+   descomente este bloco. Sem os arquivos, o stack em tailwind.config.js
+   cai em Helvetica sozinho — não deixe as regras ativas sem os arquivos,
+   senão cada página dispara 404s.
+
+@font-face {
+  font-family: "Söhne";
+  src: url("/fonts/soehne-buch.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Söhne";
+  src: url("/fonts/soehne-kraftig.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Söhne";
+  src: url("/fonts/soehne-halbfett.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Söhne";
+  src: url("/fonts/soehne-buch-kursiv.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+*/
+
+/* Listas e headings do corpo vêm do plugin @tailwindcss/typography (prose-invert).
+   O que sobra aqui é o que ele não cobre. */
+
+::selection {
+  background: #34d399; /* emerald-400 */
+  color: #0a0a0a;
+}
+
+/* No escuro o outline padrão some — foco precisa ser explícito. */
+:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Âncora não colar no topo da viewport (o header é sticky). */
+.prose h2 {
+  scroll-margin-top: 6rem;
+}
+
+/* O typography injeta backticks em volta do code inline. */
+.prose :where(code):not(:where([class~="not-prose"] *))::before,
+.prose :where(code):not(:where([class~="not-prose"] *))::after {
+  content: none;
+}
+
+.prose :where(code):not(:where([class~="not-prose"] *)) {
+  background: #171717; /* neutral-900 */
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+  font-weight: 400;
+}
+
+/* O <details> do gabarito: o typography não estiliza summary. */
+.prose summary {
+  cursor: pointer;
+  color: #a3a3a3; /* neutral-400 */
+  font-size: 0.9375rem;
+  user-select: none;
+}
+
+.prose summary:hover {
+  color: #34d399;
+}
