@@ -11,8 +11,8 @@ Abre em http://localhost:3000
 
 ## Como funciona
 
-- Cada digest é um arquivo `.md` em `content/` (ex: `2026-08-04.md`)
-- O nome do arquivo vira a URL (`/post/2026-08-04`), então use `YYYY-MM-DD.md`
+- Cada digest é um arquivo `.md` em `content/` (ex: `2026-08-03.md`)
+- O nome do arquivo vira a URL (`/post/2026-08-03`), então use `YYYY-MM-DD.md`
 - O frontmatter define título, data, tags e a lista de `items` — as novidades
   daquela semana
 - A home indexa os `items` de todas as edições: busca por texto, filtro por
@@ -25,9 +25,9 @@ Abre em http://localhost:3000
 ```yaml
 ---
 title: "Digest — 04 de agosto"
-date: 2026-08-04
+date: 2026-08-03
 tags: ["claude-code", "cursor", "nextjs"]
-cover: "/images/2026-08-04.png"
+cover: "/images/2026-08-03.png"
 coverAlt: "Descrição da imagem para leitores de tela"
 items:
   - title: "Subagentes paralelos no Claude Code"
@@ -57,7 +57,7 @@ lateral; as demais vêm por volume de itens e depois em ordem alfabética.
 ## Imagem de capa
 
 `cover` é opcional — sem ele, a edição simplesmente não mostra imagem. Aceita
-caminho de arquivo em `public/` (ex: `/images/2026-08-04.jpg`) ou URL externa.
+caminho de arquivo em `public/` (ex: `/images/2026-08-03.jpg`) ou URL externa.
 Aparece grande no topo do post e como miniatura no card "Esta semana" da home,
 sempre recortada em 16/9.
 
@@ -81,13 +81,17 @@ O prompt de curadoria precisa emitir o bloco `items:` — sem ele a edição ent
 no site, mas nenhuma novidade aparece no índice da home. Trecho pronto para
 colar no prompt:
 
-> Ao final, gere o arquivo markdown com este frontmatter, uma entrada em
-> `items` para cada novidade do digest:
+> Grave o digest em `content/<AAAA-MM-DD>.md`, onde a data é a **segunda-feira
+> de hoje** (se hoje não for segunda, use a segunda mais recente). O nome do
+> arquivo vira a URL, então não use outro dia da semana.
+>
+> O frontmatter precisa de uma entrada em `items` para cada novidade — sem
+> isso a edição não aparece no índice da home:
 >
 > ```yaml
 > ---
 > title: "Digest — <data por extenso>"
-> date: <YYYY-MM-DD>
+> date: <AAAA-MM-DD, a mesma do nome do arquivo>
 > tags: [<slugs das ferramentas citadas>]
 > items:
 >   - title: "<título curto da novidade>"

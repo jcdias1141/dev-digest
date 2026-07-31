@@ -36,7 +36,7 @@ Não existe banco, CMS nem API — para adicionar um digest basta criar o arquiv
   fixado em primeiro via `PINNED_CATEGORIES`; o resto por contagem desc e
   alfabética no empate.
 
-O **slug é derivado do nome do arquivo** (`2026-08-04.md` → `/post/2026-08-04`),
+O **slug é derivado do nome do arquivo** (`2026-07-27.md` → `/post/2026-07-27`),
 então o nome do arquivo é a URL. A convenção é `YYYY-MM-DD.md`.
 
 **Páginas:**
@@ -54,7 +54,7 @@ então o nome do arquivo é a URL. A convenção é `YYYY-MM-DD.md`.
 
 ## Formato do digest
 
-`content/2026-08-04.md` é o arquivo-modelo; o `README.md` documenta o formato
+`content/2026-07-27.md` é o arquivo-modelo; o `README.md` documenta o formato
 completo e traz o trecho para o prompt de curadoria que gera os arquivos.
 
 Regra que orienta o resto: **`items` são as novidades** (o que a home indexa),
@@ -102,9 +102,9 @@ o plugin injeta em volta do `code` inline.
 
 ## Pegadinhas
 
-- **Datas precisam de `timeZone: "UTC"`.** O YAML parseia `2026-08-04` como
+- **Datas precisam de `timeZone: "UTC"`.** O YAML parseia `2026-07-27` como
   `Date` em UTC meia-noite; sem isso o formatador converte para UTC-3 e mostra
-  03 de agosto. Já tratado em `lib/format.js`.
+  26 de julho. Já tratado em `lib/format.js`.
 - **`rehype-raw` é obrigatório** em `app/post/[slug]/page.js`. O `<details>` do
   gabarito é HTML bruto dentro do markdown, e o `react-markdown` v9 o imprime
   como texto literal sem esse plugin.
