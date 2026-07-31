@@ -2,7 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
+import {
+  ArrowUpRight01Icon,
+  CalendarCheckIcon,
+} from "@hugeicons/core-free-icons";
 import { formatShortDate, normalize } from "../lib/format";
 
 const PAGE_SIZE = 12;
@@ -160,9 +163,7 @@ export default function DigestBrowser({ items, categories, editions }) {
                     className="flex items-baseline justify-between gap-4 py-3 text-neutral-300 transition hover:text-emerald-400"
                   >
                     <span className="text-[15px]">{e.title}</span>
-                    <span className="shrink-0 text-xs text-neutral-600">
-                      {formatShortDate(e.date)}
-                    </span>
+                    <ShortDate date={e.date} />
                   </a>
                 </li>
               ))}
@@ -171,6 +172,22 @@ export default function DigestBrowser({ items, categories, editions }) {
         </div>
       </section>
     </div>
+  );
+}
+
+// Data curta dos cards e da lista de edições — mesma anatomia do DateLine,
+// numa escala menor (12px) por ser metadado de canto.
+function ShortDate({ date }) {
+  return (
+    <span className="inline-flex shrink-0 items-center gap-1 text-xs text-neutral-600">
+      <HugeiconsIcon
+        icon={CalendarCheckIcon}
+        size={13}
+        strokeWidth={2}
+        aria-hidden="true"
+      />
+      {formatShortDate(date)}
+    </span>
   );
 }
 
@@ -278,9 +295,7 @@ function Item({ item }) {
     <li className="group relative rounded-xl border border-neutral-800 bg-neutral-900/60 p-5 transition hover:border-neutral-700 hover:bg-neutral-900">
       <div className="flex items-center justify-between gap-4">
         <CategoryBadge name={item.category} slug={item.categorySlug} />
-        <span className="shrink-0 text-xs text-neutral-600">
-          {formatShortDate(item.date)}
-        </span>
+        <ShortDate date={item.date} />
       </div>
 
       <h3 className="mt-2.5 text-2xl font-bold leading-snug text-neutral-100">
