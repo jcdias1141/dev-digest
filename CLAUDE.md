@@ -78,8 +78,14 @@ quem ganha o sufixo com a data é a nova, então URLs já publicadas nunca mudam
 
 ## Formato do digest
 
-`content/2026-07-27.md` é o arquivo-modelo; o `README.md` documenta o formato
-completo e traz o trecho para o prompt de curadoria que gera os arquivos.
+**A especificação do formato é o `README.md`.** Ele documenta todos os campos e
+traz o trecho usado no prompt de curadoria.
+
+Os arquivos em `content/` **não** são documentação — são conteúdo publicado, e
+a routine semanal pode sobrescrever qualquer um deles ao regravar a edição
+daquela data. Não trate nenhum arquivo de `content/` como referência
+intocável: se precisar de um exemplo, leia o `README.md` ou olhe um `.md`
+como ilustração, sem assumir que ele deve ser preservado.
 
 Regra que orienta o resto:
 

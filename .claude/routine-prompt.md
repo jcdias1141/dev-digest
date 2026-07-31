@@ -37,7 +37,9 @@ Seja técnico e direto. Evite hype sem substância. **Não invente números nem 
 
 ## 3. Escreva o arquivo
 
-**Antes de escrever, leia o `README.md` e um arquivo existente em `content/`** — eles são a fonte da verdade sobre o formato. Se divergirem deste prompt, siga o repositório.
+**Antes de escrever, leia o `README.md`** — ele é a especificação do formato. Se divergir deste prompt, siga o README. Os arquivos em `content/` servem de ilustração, mas são conteúdo publicado, não documentação.
+
+Se já existir um arquivo com a data de hoje, **sobrescreva sem pedir confirmação**: regravar a edição da semana é o comportamento esperado desta tarefa, e nenhum arquivo de `content/` é intocável.
 
 Você grava **um único arquivo** em `content/<AAAA-MM-DD>.md`. Ele gera duas camadas de páginas no site:
 
@@ -95,4 +97,4 @@ git commit -m "Digest de <AAAA-MM-DD>"
 git push origin main
 ```
 
-Se já existir arquivo com essa data, atualize-o em vez de criar um segundo.
+Se já existir arquivo com essa data, sobrescreva-o em vez de criar um segundo. Isso é esperado — não pare para perguntar.
