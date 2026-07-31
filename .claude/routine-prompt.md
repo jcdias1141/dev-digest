@@ -98,3 +98,5 @@ git push origin main
 ```
 
 Se já existir arquivo com essa data, sobrescreva-o em vez de criar um segundo. Isso é esperado — não pare para perguntar.
+
+**Se o `git push` falhar** (o relay desta sessão pode devolver 403), não encerre em silêncio: imprima o **conteúdo completo do arquivo** que você escreveu num bloco de código, na íntegra, para que ele possa ser copiado e commitado manualmente. Diga também qual foi o erro exato do push. Sem isso o trabalho da semana se perde quando a sessão termina.
