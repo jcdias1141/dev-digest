@@ -19,7 +19,22 @@ async function message(prompt, research = false) {
     }),
     signal: AbortSignal.timeout(300_000),
   });
-  if (!response.ok) throw new Error(`API do Claude: HTTP ${response.status}. Confira chave, saldo, modelo e acesso à pesquisa web. Request ID: ${response.headers.get('request-id') || 'indisponível'}`);
+  if (!response.ok) {
+    let detail;
+    try { detail = await response.json(); } catch { /* Pode haver uma resposta não JSON do proxy. */ }
+    // Exibir somente o diagnóstico da API, nunca headers, payload ou credenciais.
+    const redact = value => {
+      let text = typeof value === 'string' ? value : '';
+      if (process.env.ANTHROPIC_API_KEY)
+        text = text.replaceAll(process.env.ANTHROPIC_API_KEY, '[chave removida]');
+      return text.replace(/sk-ant-[A-Za-z0-9_-]+/g, '[chave removida]')
+        .replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 1000);
+    };
+    const type = redact(detail?.error?.type);
+    const reason = redact(detail?.error?.message) || 'A API não retornou detalhes legíveis. Confira chave, saldo, modelo e pesquisa web.';
+    const requestId = redact(response.headers.get('request-id') || detail?.request_id) || 'indisponível';
+    throw new Error(`API do Claude: HTTP ${response.status}${type ? ` (${type})` : ''}. ${reason} Request ID: ${requestId}`);
+  }
   const result = await response.json();
   console.log(`API: ${JSON.stringify(result.usage)}`);
   if (result.stop_reason !== 'end_turn')

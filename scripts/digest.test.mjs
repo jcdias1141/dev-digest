@@ -80,6 +80,13 @@ test('geração completa com API simulada, limites e reexecução sem sobrescrev
         assert.equal(body.max_tokens, 7000);
       }
       if (process.env.MOCK_FAIL === 'http') return { ok: false, status: 401, headers: new Headers() };
+      if (process.env.MOCK_FAIL === 'bad-request') return {
+        ok: false, status: 400, headers: new Headers(),
+        json: async () => ({
+          error: { type: 'invalid_request_error', message: 'Your credit balance is too low. fake-test-key sk-ant-test-secret' },
+          request_id: 'req_test_400'
+        })
+      };
       fs.appendFileSync('calls.txt', 'call\\n');
       return { ok: true, json: async () => ({
         stop_reason: process.env.MOCK_FAIL === 'truncated' ? 'max_tokens' : 'end_turn',
@@ -98,6 +105,13 @@ test('geração completa com API simulada, limites e reexecução sem sobrescrev
   const fail = run({ MOCK_FAIL: 'http' });
   assert.equal(fail.status, 1);
   assert.match(fail.stderr, /HTTP 401/);
+  assert.equal(fs.existsSync(path.join(cwd, `content/${monday()}.md`)), false);
+  const badRequest = run({ MOCK_FAIL: 'bad-request' });
+  assert.equal(badRequest.status, 1);
+  assert.match(badRequest.stderr, /HTTP 400 \(invalid_request_error\)/);
+  assert.match(badRequest.stderr, /Your credit balance is too low/);
+  assert.match(badRequest.stderr, /req_test_400/);
+  assert.doesNotMatch(badRequest.stderr, /fake-test-key|sk-ant-test-secret/);
   assert.equal(fs.existsSync(path.join(cwd, `content/${monday()}.md`)), false);
   const truncated = run({ MOCK_FAIL: 'truncated' });
   assert.equal(truncated.status, 1);
