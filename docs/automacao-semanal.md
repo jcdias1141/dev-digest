@@ -125,6 +125,24 @@ agendamentos após 60 dias sem atividade; confira a aba Actions se as execuçõe
 pararem. Uma execução falhar explicitamente é preferível a publicar notícias
 inventadas para preencher a semana.
 
+## Execução excepcional de 11/09/2026
+
+O workflow `digest-today.yml` agenda um disparo do **Digest semanal** com
+`publish=true` para **11/09/2026 às 19h23 de Brasília** (22h23 UTC).
+Ele roda no GitHub, sem depender deste computador ou de uma sessão aberta.
+O GitHub pode atrasar o início de tarefas agendadas.
+
+Há uma trava para executar somente nessa data e a partir desse horário.
+Depois de disparar, o workflow excepcional se desativa; o workflow semanal
+continua independente, controlado pela variável `ENABLE_WEEKLY_DIGEST`.
+Se o disparo atrasar para outro dia, ele não publicará. A opção manual
+`check_only=true` permite conferir a janela sem chamar a API nem publicar.
+
+O sucesso do workflow excepcional significa que o disparo foi aceito. A geração,
+o build, o push e a confirmação no domínio principal aparecem em uma execução
+separada de **Digest semanal**. Se a API continuar sem créditos, a publicação
+falha nessa execução e nenhum novo post é commitado.
+
 ## Validação local
 
 ```bash

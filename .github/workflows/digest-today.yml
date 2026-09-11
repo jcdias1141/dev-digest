@@ -1,0 +1,53 @@
+name: Publicação excepcional — 11 de setembro
+
+on:
+  schedule:
+    # 11/09 às 19h23 em Brasília (22h23 UTC). A trava abaixo inclui o ano.
+    - cron: '23 22 11 9 *'
+  workflow_dispatch:
+    inputs:
+      check_only:
+        description: 'Apenas conferir o agendamento, sem pesquisar nem publicar'
+        type: boolean
+        default: true
+
+permissions:
+  actions: write
+
+concurrency:
+  group: digest-once-2026-09-11
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Conferir a data e o horário em Brasília
+        id: window
+        shell: bash
+        run: |
+          run_date="$(TZ=America/Sao_Paulo date +%Y-%m-%d)"
+          run_time="$(TZ=America/Sao_Paulo date +%H%M)"
+          due=false
+          if [[ "$run_date" == '2026-09-11' && "$run_time" > '1922' ]]; then
+            due=true
+          fi
+          echo "due=$due" >> "$GITHUB_OUTPUT"
+          {
+            echo 'Execução excepcional: 11/09/2026, às 19h23 de Brasília.'
+            echo "Agora: $run_date $run_time. Dentro da janela: $due."
+            echo 'O agendamento roda no GitHub e pode sofrer atraso. Fora dessa data não haverá publicação por este workflow.'
+            echo 'Depois do disparo, acompanhe o resultado em Actions → Digest semanal.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Iniciar geração, testes e publicação
+        if: steps.window.outputs.due == 'true' && (github.event_name == 'schedule' || !inputs.check_only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run weekly-digest.yml --repo "$GITHUB_REPOSITORY" --ref main -f publish=true
+      - name: Desativar este agendamento excepcional após o disparo ou vencimento
+        if: success() && (github.event_name == 'schedule' || (!inputs.check_only && steps.window.outputs.due == 'true'))
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow disable digest-today.yml --repo "$GITHUB_REPOSITORY"
