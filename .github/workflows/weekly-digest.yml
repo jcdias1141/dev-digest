@@ -1,0 +1,108 @@
+name: Digest semanal
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publicar na main e verificar o site (desmarcado = apenas teste)'
+        type: boolean
+        default: false
+  schedule:
+    # Segunda 06h17 e recuperação às 09h17, horário de Brasília.
+    - cron: '17 9,12 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || vars.ENABLE_WEEKLY_DIGEST == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: write
+    env:
+      PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+      DIGEST_SITE_URL: ${{ vars.DIGEST_SITE_URL }}
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Conferir configuração de publicação
+        if: env.PUBLISH == 'true'
+        run: npm run digest:verify -- config
+      - run: npm run digest:test
+      - name: Pesquisar e gerar a edição (preserva edições existentes)
+        id: generate
+        run: npm run digest:generate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+      - run: npm run build
+      - name: Conferir home, edição e páginas das novidades no build
+        run: npm run digest:verify -- build
+        env:
+          DIGEST_DATE: ${{ steps.generate.outputs.date }}
+      - name: Guardar rascunho e pesquisa, inclusive em caso de falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .digest/
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Commit e push somente do post validado
+        if: env.PUBLISH == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIGEST_FILE: ${{ steps.generate.outputs.file }}
+          DIGEST_DATE: ${{ steps.generate.outputs.date }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$DIGEST_FILE"
+          if git diff --cached --quiet; then
+            echo 'Edição já commitada; verificaremos a publicação existente.'
+          else
+            git commit -m "Digest de $DIGEST_DATE"
+            # Credencial só nesta etapa, sem gravá-la no checkout ou na URL.
+            git -c credential.helper= -c 'credential.helper=!f() { echo username=x-access-token; echo "password=$GH_TOKEN"; }; f' push origin HEAD:main
+          fi
+      - name: Disparar deploy explícito, se configurado
+        if: env.PUBLISH == 'true'
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -n "$VERCEL_DEPLOY_HOOK" ]; then
+            curl --fail --silent --show-error --max-time 60 -X POST "$VERCEL_DEPLOY_HOOK" --output /dev/null
+          fi
+      - name: Confirmar publicação no domínio principal
+        if: env.PUBLISH == 'true'
+        run: npm run digest:verify -- deployed
+        env:
+          DIGEST_DATE: ${{ steps.generate.outputs.date }}
+      - name: Resultado
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          DIGEST_DATE: ${{ steps.generate.outputs.date }}
+        run: |
+          {
+            echo "Resultado: $JOB_STATUS"
+            echo "Edição: $DIGEST_DATE"
+            echo "Publicação solicitada: $PUBLISH"
+            echo 'Consulte o artefato para revisar ou recuperar o conteúdo. Teste sem publicação também usa a API quando a edição não existe.'
+            echo 'Falha após o push pode deixar o commit no GitHub. Confira o deploy na Vercel e reexecute; a edição existente será preservada.'
+          } >> "$GITHUB_STEP_SUMMARY"

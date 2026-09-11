@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "digest:generate": "node scripts/generate-digest.mjs",
+    "digest:verify": "node scripts/verify-digest.mjs",
+    "digest:test": "node --test scripts/digest.test.mjs"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.2.3",

@@ -1,5 +1,10 @@
 # Prompt da routine semanal
 
+> Fluxo anterior, mantido para referência. A nova automação pelo GitHub Actions
+> está documentada em `docs/automacao-semanal.md`. Desative esta rotina no painel
+> do Claude após confirmar a primeira publicação pelo Actions; este arquivo
+> não ativa nem desativa a rotina remota.
+
 Este é o prompt do agente agendado que gera o digest toda segunda às 06h
 (Brasília). Mantido aqui para ficar versionado e para poder recriar a routine
 sem reescrever tudo.

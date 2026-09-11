@@ -105,6 +105,13 @@ origem — se o blog for publicado, ela fica pública junto.
 
 ## Automatizar
 
+O fluxo pelo GitHub Actions está em `.github/workflows/weekly-digest.yml`.
+Veja o [passo a passo de configuração, teste e ativação](docs/automacao-semanal.md).
+O agendamento fica desativado até definir `ENABLE_WEEKLY_DIGEST=true` nas
+variables do repositório. A execução manual começa em modo de teste, sem push.
+
+O trecho abaixo documenta o formato de conteúdo para outras integrações:
+
 Faça sua tarefa de segunda escrever um arquivo novo em `content/` seguindo o
 formato acima. O blog atualiza sozinho no próximo `npm run dev` / build.
 
