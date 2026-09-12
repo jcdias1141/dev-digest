@@ -44,6 +44,26 @@
 /* Listas e headings do corpo vêm do plugin @tailwindcss/typography (prose-invert).
    O que sobra aqui é o que ele não cobre. */
 
+/* Título de digest costuma trazer identificador que não quebra sozinho
+   (CLAUDE_CODE_SUBAGENT_MODEL vazava 400px da viewport a 390px de largura).
+   Global de propósito: o conteúdo é gerado toda segunda e os títulos são
+   imprevisíveis, então exigir `break-words` em cada componente novo é uma
+   regra que se esquece.
+
+   `anywhere` e não `break-word`: os dois quebram igual na tela, mas só o
+   `anywhere` entra no cálculo de min-content. É o que faz a coluna do grid
+   encolher — com `break-word` cada grid precisaria do seu `min-w-0`. */
+h1,
+h2,
+h3,
+h4,
+p,
+li,
+summary,
+a {
+  overflow-wrap: anywhere;
+}
+
 ::selection {
   background: #34d399; /* emerald-400 */
   color: #0a0a0a;

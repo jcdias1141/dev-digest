@@ -59,7 +59,7 @@ export default function DigestBrowser({ items, categories, editions }) {
       {/* Navegação: acompanha a rolagem em telas largas. */}
       <aside
         aria-labelledby="filtros"
-        className="lg:sticky lg:top-24 lg:self-start"
+        className="min-w-0 lg:sticky lg:top-24 lg:self-start"
       >
         <h2
           id="filtros"
@@ -105,7 +105,10 @@ export default function DigestBrowser({ items, categories, editions }) {
         </p>
       </aside>
 
-      <section>
+      {/* min-w-0: item de grid tem min-width:auto e não encolhe abaixo do
+          conteúdo. Sem isto, um título longo estica a coluna e leva a página
+          inteira junto — inclusive o aside, que não tem culpa nenhuma. */}
+      <section className="min-w-0">
         {visibleItems.length === 0 ? (
           <div className="rounded-lg border border-neutral-800 bg-neutral-900 px-5 py-10 text-center">
             <p className="text-sm text-neutral-400">
